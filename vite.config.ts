@@ -21,6 +21,13 @@ export default defineConfig({
       '@':resolvePath('src'),
     },
   },
+  css:{
+    preprocessorOptions:{
+      scss:{
+        additionalData: '@import "./src/assets/scss/style.scss";'
+      }
+    }
+  },
   build:{
     // lib: {
     //   entry:resolve(__dirname, 'src/main.ts'),
