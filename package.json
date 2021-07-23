@@ -4,7 +4,9 @@
   "scripts": {
     "dev": "vite --host",
     "build": "vite build",
-    "serve": "vite preview"
+    "serve": "vite preview",
+    "install:yarn": "yarn install & del yarn.lock",
+    "del:node_modules": "rd /s/q node_modules"
   },
   "dependencies": {
     "@types/node": "^16.0.0",
@@ -14,9 +16,12 @@
     "element-plus": "^1.0.2-beta.55",
     "eslint": "^7.30.0",
     "eslint-plugin-vue": "^7.13.0",
+    "node-sass": "^4.14.1",
     "sass": "^1.35.2",
+    "sass-loader": "^8.0.2",
     "vue": "^3.0.5",
-    "vue-router": "4"
+    "vue-router": "4",
+    "vuex": "^3.6.2"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^1.2.4",
