@@ -1,16 +1,19 @@
 import axios, {AxiosRequestConfig, AxiosResponse} from 'axios'
 
 const service = axios.create({
-    baseURL: 'https://open-api.ambow.com/',  // url = base url + request url
+    baseURL: 'https://dev-open-api.ambow.com/',  // url = base url + request url
     timeout: 40 * 1000, // 默认用40s超时时间
     headers: { // 配置OAuth 2.0的认证头
-        'Content-Type': 'application/json;charset=utf-8'
+        'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8'
     },
-    withCredentials: true // 是否携带 cookie 默认携带 cookie
+    // withCredentials: true // 是否携带 cookie 默认携带 cookie
 })
 
 // 请求前置拦截器
 service.interceptors.request.use((config) => {
+    // 添加自定义请求头
+    config.headers.apparea = 'China'
+    config.headers.appId = '090909'
     return config
 }, (error) => {
     return Promise.reject(error)
@@ -60,4 +63,4 @@ export function request<T>(config: AxiosRequestConfig) {
     })
 }
 
-export default service
+export default request

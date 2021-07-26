@@ -9,6 +9,7 @@ import {
 } from 'vue'
 import loginStyle from './login.module.scss'
 import { useRouter} from "vue-router";
+import request from "@/serve/request";
 
 // 登录接口类型
 interface LoginData {
@@ -32,6 +33,11 @@ export default defineComponent({
         console.log(route);
 
         async function goLogin(){
+            let res = await request<any>({
+                url:'/edurp-saas-client/saas/login/api/v3/login',
+            });
+            console.log(res);
+            return false
             await route.push('/')
         }
         // 整体表单内容
