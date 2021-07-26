@@ -12,15 +12,16 @@ type colorThem = {
 }
 import { ElMessage } from 'element-plus'
 export const color = reactive<colorThem>({
-    theme:'#409EFF',
+    theme:'#409eff',
 })
-let callTheme:string = ''
-function getCSSString(url:string) {
+let callTheme:string = '';
+// 获取外部样式内容
+function getCSSString(url:string):Promise<string> {
     return new Promise(resolve => {
         const xhr = new XMLHttpRequest()
         xhr.onreadystatechange = () => {
             if (xhr.readyState === 4 && xhr.status === 200) {
-                callTheme = xhr.responseText.replace(/@font-face{[^}]+}/, '')
+                callTheme = getStyleTemplate(xhr.responseText.replace(/@font-face{[^}]+}/, ''))
                 resolve(callTheme)
             }
         }
@@ -28,114 +29,47 @@ function getCSSString(url:string) {
         xhr.send()
     })
 }
-function getThemeCluster(theme:string):string[] {
-    const tintColor = (color:string, tint:number):string => {
-        let red:number = parseInt(color.slice(0, 2), 16)
-        let green:number = parseInt(color.slice(2, 4), 16)
-        let blue:number = parseInt(color.slice(4, 6), 16)
-
-        if (tint === 0) { // when primary color is in its rgb space
-            return [red, green, blue].join(',')
-        } else {
-            red += Math.round(tint * (255 - red))
-            green += Math.round(tint * (255 - green))
-            blue += Math.round(tint * (255 - blue))
-
-            let reds = red.toString(16)
-            let greens = green.toString(16)
-            let blues = blue.toString(16)
-
-            return `#${reds}${greens}${blues}`
-        }
+function getStyleTemplate (data:string):string {
+    let colorMap = {
+        '#3a8ee6': 'shade-1',
+        '#409eff': 'primary',
+        '#53a8ff': 'light-1',
+        '#66b1ff': 'light-2',
+        '#79bbff': 'light-3',
+        '#8cc5ff': 'light-4',
+        '#a0cfff': 'light-5',
+        '#b3d8ff': 'light-6',
+        '#c6e2ff': 'light-7',
+        '#d9ecff': 'light-8',
+        '#ecf5ff': 'light-9'
     }
-
-    const shadeColor = (color:string, shade:number):string => {
-        let red = parseInt(color.slice(0, 2), 16)
-        let green = parseInt(color.slice(2, 4), 16)
-        let blue = parseInt(color.slice(4, 6), 16)
-
-        red = Math.round((1 - shade) * red)
-        green = Math.round((1 - shade) * green)
-        blue = Math.round((1 - shade) * blue)
-
-        let reds = red.toString(16)
-        let greens = green.toString(16)
-        let blues = blue.toString(16)
-
-        return `#${reds}${greens}${blues}`
-    }
-
-    const clusters = [theme]
-    for (let i = 0; i <= 9; i++) {
-        clusters.push(tintColor(theme, Number((i / 10).toFixed(2))))
-    }
-    clusters.push(shadeColor(theme, 0.1))
-    return clusters
-}
-function updateStyle(style:string, oldCluster:string[], newCluster:string[]):string {
-    let newStyle = style
-    oldCluster.forEach((color, index) => {
-        newStyle = newStyle.replace(new RegExp(color, 'ig'), newCluster[index])
-        console.log(newStyle.indexOf(color));
+    Object.keys(colorMap).forEach(key => {
+        const value = (colorMap as any)[key]
+        data = data.replace(new RegExp(key, 'ig'), value)
     })
-    return newStyle
+    return data
 }
+import {generateColors} from "@/utils";
+
 export default defineComponent({
     methods:{
-        async changeTheme(val:string){
-            console.log(val);
-            let ORIGINAL_THEME = color.theme
-            const oldVal = callTheme ? callTheme : ORIGINAL_THEME
-            const themeCluster = getThemeCluster(val.replace('#', ''))
-            const originalCluster = getThemeCluster(oldVal.replace('#', ''))
-            console.log(themeCluster);
-            console.log(originalCluster);
-            const $message = ElMessage({
-                message: '  Compiling the theme',
-                customClass: 'theme-message',
-                type: 'success',
-                duration: 0,
-                iconClass: 'el-icon-loading'
-            })
-
-            const getHandler = (variable:string, id:string) => {
-                return () => {
-                    const originalCluster = getThemeCluster(ORIGINAL_THEME.replace('#', ''))
-                    const newStyle = updateStyle(callTheme, originalCluster, themeCluster)
-                    console.log(newStyle);
-                    let styleTag = document.getElementById(id)
-                    if (!styleTag) {
-                        styleTag = document.createElement('style')
-                        styleTag.setAttribute('id', id)
-                        document.head.appendChild(styleTag)
-                    }
-                    styleTag.innerText = newStyle
-                }
-            }
-
+        async changeTheme1(val:string,id = 'chalk-style'){
+            let cssText:string = callTheme;
             if (!callTheme) {
                 const url = `https://unpkg.com/element-plus@${version}/lib/theme-chalk/index.css`;
-                await getCSSString(url)
+                cssText = await getCSSString(url);
             }
-
-            const chalkHandler = getHandler('chalk', 'chalk-style')
-
-            chalkHandler()
-
-            const styles = [].slice.call(document.querySelectorAll('style'))
-                .filter((style:{innerText:string}) => {
-                    const text = style.innerText
-                    return new RegExp(oldVal, 'i').test(text) && !/Chalk Variables/.test(text)
-                })
-            console.log(styles);
-            styles.forEach((style:{innerText:string}) => {
-                const { innerText } = style
-                style.innerText = updateStyle(innerText, originalCluster, themeCluster)
+            let colors = {primary:color.theme,...generateColors(val)}
+            Object.keys(colors).forEach(key => {
+                cssText = cssText.replace(new RegExp('(:|\\s+)' + key, 'g'), '$1' + (colors as any)[key])
             })
-
-            this.$emit('change', val)
-
-            $message.close()
+            let styleTag = document.getElementById(id)
+            if (!styleTag) {
+                styleTag = document.createElement('style')
+                styleTag.setAttribute('id', id)
+                document.head.appendChild(styleTag)
+            }
+            styleTag.innerText = cssText
         }
     },
     render(){
@@ -144,10 +78,11 @@ export default defineComponent({
             v-model={color.theme}
             predefine={['#409EFF', '#1890ff', '#304156','#212121','#11a983', '#13c2c2', '#6959CD', '#f5222d', ]}
             popper-class="theme-picker-dropdown"
-            onChange={this.changeTheme}
+            onChange={this.changeTheme1}
         />)
         components.push(<div class={style.body_div}>asdfsdf</div>)
         components.push(<el-button type="primary">测试内哦给你</el-button>)
+        components.push(<el-button type="success">测试内哦给11你</el-button>)
        return h('div',components)
     }
 })

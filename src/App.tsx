@@ -8,6 +8,7 @@ export default defineComponent({
         let appView: VNodeArrayChildren = [];
         appView.push(<router-link to="/">home</router-link>)
         appView.push(<router-link to="/main">main</router-link>)
+        appView.push(<router-link to="/login">登录</router-link>)
         appView.push(<router-view />)
         // button.push(<div></div>)
         return  h('div', appView)

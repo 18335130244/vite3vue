@@ -5,8 +5,10 @@ import router from "@/router";
 
 import Element from 'element-plus';
 // 导入样式
-import './assets/scss/globale.scss'
-// import 'element-plus/packages/theme-chalk/src/index.scss'
+// import './assets/scss/global.scss'
+import 'element-plus/lib/theme-chalk/index.css';
 // import './assets/scss/style.scss'
 
-createApp(App).use(router).use(Element).mount('#app')
+import store from '@/store'
+
+createApp(App).use(router).use(Element).use(store).mount('#app')

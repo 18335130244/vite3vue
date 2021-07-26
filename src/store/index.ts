@@ -1,13 +1,13 @@
-import { createStore } from "vuex";
+import { createStore } from 'vuex';
 
 // Instantiate our Vuex store
-const store = createStore({
-
-    // "State" 组件的应用程序数据
-
+export default createStore<any>({
     state () {
         return {
-            myValue: 0
         };
+    },
+    getters:{
+        getTheme(){
+        }
     }
 });

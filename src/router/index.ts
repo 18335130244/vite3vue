@@ -18,9 +18,9 @@ const router = createRouter(<RouterOptions>{
             component: () => import('@/view/main/index'),
         },
         {
-            path: '/*',
-            name: 'notFound',
-            component: () => import('@/view/notFound/index')
+            path: '/login',
+            name: 'login',
+            component: () => import('@/view/login/index')
         }
     ],
 })
