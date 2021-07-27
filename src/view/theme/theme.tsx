@@ -10,7 +10,7 @@ import style from "@/assets/scss/style.module.scss"
 type colorThem = {
     theme:string
 }
-import { ElMessage } from 'element-plus'
+import { ElMessage, ElLoading } from 'element-plus'
 export const color = reactive<colorThem>({
     theme:'#409eff',
 })
@@ -55,6 +55,7 @@ export default defineComponent({
     methods:{
         async changeTheme1(val:string,id = 'chalk-style'){
             let cssText:string = callTheme;
+            let loading = ElLoading.service({text:'加载皮肤中'});
             if (!callTheme) {
                 const url = `https://unpkg.com/element-plus@${version}/lib/theme-chalk/index.css`;
                 cssText = await getCSSString(url);
@@ -70,6 +71,7 @@ export default defineComponent({
                 document.head.appendChild(styleTag)
             }
             styleTag.innerText = cssText
+            loading.close();
         }
     },
     render(){

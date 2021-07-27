@@ -14,8 +14,10 @@ service.interceptors.request.use((config) => {
     // 添加自定义请求头
     config.headers.apparea = 'China'
     config.headers.appId = '090909'
+    config.headers.splitKey = '1233452345742423412'
     return config
 }, (error) => {
+    console.log(error);
     return Promise.reject(error)
 })
 
@@ -51,9 +53,9 @@ type AxiosResponseData<T> = {
 };
 // 发起请求
 export function request<T>(config: AxiosRequestConfig) {
-    return new Promise<AxiosResponse<AxiosResponseData<T>>>(async (resolve, reject) => {
+    return new Promise<AxiosResponse<T>>(async (resolve, reject) => {
         try {
-            const result = await axios({
+            const result = await service({
                 ...config
             })
             resolve(result)
