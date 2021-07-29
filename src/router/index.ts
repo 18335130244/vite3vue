@@ -36,9 +36,20 @@ const router = createRouter(<RouterOptions>{
         }
     ],
 })
-//
-// router.beforeEach(async (to, form)=>{
-//     return await canUserAccess(to)
-// })
+
+// 进入前拦截
+router.beforeEach((to, form,next)=>{
+    if(!localStorage.getItem('token')){
+        if(to.name === 'login'){
+            next();
+        }else{
+            next({
+                path:"/login"
+            })
+        }
+        return false
+    }
+    next();
+})
 
 export default router;

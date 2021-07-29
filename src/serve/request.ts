@@ -1,7 +1,7 @@
 import axios, {AxiosRequestConfig, AxiosResponse} from 'axios'
 
 const service = axios.create({
-    baseURL: 'https://dev-open-api.ambow.com/',  // url = base url + request url
+    baseURL: 'https://uat-open-api.ambow.com/',
     timeout: 40 * 1000, // 默认用40s超时时间
     headers: { // 配置OAuth 2.0的认证头
         'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8'
