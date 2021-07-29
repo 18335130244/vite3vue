@@ -15,6 +15,9 @@ service.interceptors.request.use((config) => {
     config.headers.apparea = 'China'
     config.headers.appId = '090909'
     config.headers.splitKey = '1233452345742423412'
+    if(localStorage.getItem('token')){
+        config.headers.Authorization = localStorage.getItem('token')
+    }
     return config
 }, (error) => {
     console.log(error);

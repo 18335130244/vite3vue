@@ -3,14 +3,13 @@ import '@/assets/scss/App.scss'
 
 export default defineComponent({
     name:'App',
-    render(){
+    setup(){
         // 填充组件内容
-        let appView: VNodeArrayChildren = [];
-        appView.push(<router-link to="/">home</router-link>)
-        appView.push(<router-link to="/main">main</router-link>)
-        appView.push(<router-link to="/login">登录</router-link>)
-        appView.push(<router-view />)
+        // appView.push(<router-link to="/">home</router-link>)
+        // appView.push(<router-link to="/main">main</router-link>)
+        // appView.push(<router-link to="/login">登录</router-link>)
+        // appView.push(<router-link to="/111">other</router-link>)
         // button.push(<div></div>)
-        return  h('div', appView)
+        return ()=> (<router-view />)
     }
 })

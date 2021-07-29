@@ -2,7 +2,6 @@ import {
     defineComponent,
     h,
     reactive,
-    watch,
     VNodeArrayChildren,
 } from 'vue'
 import {version} from 'element-plus/package.json'
@@ -10,8 +9,8 @@ import style from "@/assets/scss/style.module.scss"
 type colorThem = {
     theme:string
 }
-import { ElMessage, ElLoading } from 'element-plus'
-export const color = reactive<colorThem>({
+import { ElLoading } from 'element-plus'
+export const themeColorConfig = reactive<colorThem>({
     theme:'#409eff',
 })
 let callTheme:string = '';
@@ -60,7 +59,7 @@ export default defineComponent({
                 const url = `https://unpkg.com/element-plus@${version}/lib/theme-chalk/index.css`;
                 cssText = await getCSSString(url);
             }
-            let colors = {primary:color.theme,...generateColors(val)}
+            let colors = {primary:themeColorConfig.theme,...generateColors(val)}
             Object.keys(colors).forEach(key => {
                 cssText = cssText.replace(new RegExp('(:|\\s+)' + key, 'g'), '$1' + (colors as any)[key])
             })
@@ -77,7 +76,7 @@ export default defineComponent({
     render(){
         let components:VNodeArrayChildren = [];
         components.push(<el-color-picker
-            v-model={color.theme}
+            v-model={themeColorConfig.theme}
             predefine={['#409EFF', '#1890ff', '#304156','#212121','#11a983', '#13c2c2', '#6959CD', '#f5222d', ]}
             popper-class="theme-picker-dropdown"
             onChange={this.changeTheme1}

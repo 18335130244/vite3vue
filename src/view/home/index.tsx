@@ -1,6 +1,6 @@
 import {defineComponent, h, reactive, VNodeArrayChildren} from 'vue'
 import './home.scss'
-import theme, {color} from "@/view/theme/theme";
+import theme, {themeColorConfig} from "@/view/theme/theme";
 // 创建组件相关类型内容
 export const stateHome = reactive<{
     buttonName:string
@@ -19,7 +19,7 @@ export default defineComponent({
         divContent.push(<div>{stateHome.msg2}</div>);
         divContent.push(<theme content={stateHome.msg2} />);
         divContent.push(<el-input v-model={stateHome.msg2} />);
-        divContent.push(<el-input v-model={color.theme} />);
+        divContent.push(<el-input v-model={themeColorConfig.theme} />);
         // button.push(<div></div>)
         return  h('div', divContent)
     }

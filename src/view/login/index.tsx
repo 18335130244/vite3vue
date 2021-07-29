@@ -21,6 +21,10 @@ let formData = reactive<LoginData>({
         reg:"886"
     }
 })
+function clearFormData() {
+    formData.form.account = '';
+    formData.form.password = '';
+}
 import { ElMessage } from 'element-plus'
 import {AxiosResponse} from "axios";
 // 获取外部样式内容
@@ -37,10 +41,15 @@ export default defineComponent({
                 data:qs.stringify(formData.form)
             });
             if(!res.data.code){
-                console.log(res.data);
                 ElMessage.success('登录成功');
+                // 清空登录名与密码
+                clearFormData()
+                // 存储 token 等信息
+                localStorage.setItem('token',res.data.data);
+                await route.push('/')
+            }else{
+                ElMessage.error(res.data.msg)
             }
-            await route.push('/')
         }
         // 整体表单内容
         let form:VNodeArrayChildren = [];
@@ -49,7 +58,7 @@ export default defineComponent({
                 <el-input type={'text'} v-model={formData.form.account} />
             </el-form-item>,
             <el-form-item label={"密码"}>
-                <el-input type={'password'} v-model={formData.form.password} />
+                <el-input type={'password'} v-model={formData.form.password} showPassword/>
             </el-form-item>,
             <el-form-item label-width={0} class={loginStyle.login_center}>
                 <el-button onClick={()=>goLogin()} type={'primary'}>登录</el-button>
