@@ -56,8 +56,11 @@ export default defineComponent({
             let cssText:string = callTheme;
             let loading = ElLoading.service({text:'加载皮肤中'});
             if (!callTheme) {
-                const url = `https://unpkg.com/element-plus@${version}/lib/theme-chalk/index.css`;
-                cssText = await getCSSString(url);
+                let elementPlusStyle: HTMLElement = document.getElementById('next-element-plus') as HTMLElement;
+                elementPlusStyle = elementPlusStyle.nextElementSibling as HTMLElement;
+                cssText = getStyleTemplate(elementPlusStyle.innerText.replace(/@font-face{[^}]+}/, ''));
+                // const url = `https://unpkg.com/element-plus@${version}/lib/theme-chalk/index.css`;
+                // cssText = await getCSSString(url);
             }
             let colors = {primary:themeColorConfig.theme,...generateColors(val)}
             Object.keys(colors).forEach(key => {

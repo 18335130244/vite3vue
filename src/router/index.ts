@@ -19,7 +19,7 @@ const router = createRouter(<RouterOptions>{
                 },
                 {
                     path: '/main',
-                    name: 'main111',
+                    name: 'main',
                     component: () => import('@/view/main/index'),
                 }
             ]

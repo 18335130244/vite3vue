@@ -6,7 +6,7 @@ import {
     PropType,
     defineProps,
 } from 'vue'
-import {directoryDataInterface} from "@/view/layout/components/Sidebar.interface";
+import {directoryDataInterface} from "@/view/layout/components/sidebar/Sidebar.interface";
 
 export default defineComponent({
     name: 'sidebarItem',

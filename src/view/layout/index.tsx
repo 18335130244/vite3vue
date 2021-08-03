@@ -4,7 +4,8 @@
 import {
     defineComponent,
 } from 'vue'
-import Sidebar from "@/view/layout/components/Sidebar";
+import Sidebar from "@/view/layout/components/sidebar/Sidebar";
+import AppMain from "@/view/layout/components/appMain";
 import layoutStyle from './index.module.scss';
 
 export default defineComponent({
@@ -14,7 +15,7 @@ export default defineComponent({
                 <Sidebar class={layoutStyle.sidebar_box}/>
                 <div class={layoutStyle.contentRight}>
                     <el-scrollbar height="100%">
-                        <router-view />
+                        <AppMain />
                     </el-scrollbar>
                 </div>
             </div>

@@ -10,9 +10,9 @@ import {
     configurationInterface,
     directoryDataInterface,
     resourceDataInterface
-} from "@/view/layout/components/Sidebar.interface";
+} from "@/view/layout/components/sidebar/Sidebar.interface";
 import request from "@/serve/request";
-import SidebarItem from "@/view/layout/components/SidebarItem";
+import SidebarItem from "@/view/layout/components/sidebar/SidebarItem";
 // 皮肤内容
 import { themeColorConfig } from "@/view/theme/theme";
 // 动态数据区间
