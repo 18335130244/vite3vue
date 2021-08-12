@@ -6,6 +6,7 @@ import {
     h,
     reactive,
     VNodeArrayChildren,
+    onDeactivated
 } from 'vue'
 import loginStyle from './login.module.scss'
 import { useRouter} from "vue-router";
@@ -31,9 +32,25 @@ import {AxiosResponse} from "axios";
 export default defineComponent({
     setup(){
         let route = useRouter();
-        console.log(route);
+        // Enter key
+        function EnterKeydown(e:KeyboardEvent){
+            console.log(e);
+            if(e.key == 'Enter'){
+                goLogin().then()
+            }
+
+        }
+        document.addEventListener('keydown',EnterKeydown)
 
         async function goLogin(){
+            if(!formData.form.account){
+                ElMessage.error('填写登录名');
+                return ;
+            }
+            if(!formData.form.password){
+                ElMessage.error('填写密码');
+                return ;
+            }
             // 声明接受类型
             let res:AxiosResponse<LoginReturnData> = await request<LoginReturnData>({
                 method:'post',
@@ -47,6 +64,7 @@ export default defineComponent({
                 // 存储 token 等信息
                 localStorage.setItem('token',res.data.data);
                 await route.push('/')
+                document.removeEventListener('keydown',EnterKeydown)
             }else{
                 ElMessage.error(res.data.msg)
             }
@@ -65,5 +83,5 @@ export default defineComponent({
             </el-form-item>
             )
         return ()=>  (<el-form class={loginStyle.login_view} model={formData.form} label-width={'80px'}>{form}</el-form>)
-    }
+    },
 })

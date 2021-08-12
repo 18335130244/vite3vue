@@ -1,25 +1,51 @@
 const axios = require('axios');
-const cheerio = require('cheerio');
-
-axios.get('https://datachart.500.com/ssq/zoushi/newinc/jbzs_redblue.php?expect=100')
-    .then(response => {
-        const $ = cheerio.load(response.data);
-        var data = $('#tdata').find('tr');
-        for(var i = data.length ; i > 0 ; i --){
-            var td2 = $(data).eq(i).find('.chartBall02');
-            var td1 = $(data).eq(i).find('td').eq(0);
-            if(td2.html()==null){
-                continue;
-            }
-            var td = $(data).eq(i).find('.chartBall01');
-            var str = `期数:${$(td1).html()}--红球:`;
-            for(var j = 0 ; j < td.length ; j ++){
-                str += `${j?'、':''}${$(td).eq(j).html()}`
-            }
-            str += `--蓝球:${$(td2).html()}`
-            console.log(str);
+var headers = {Authorization:'Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI1YjQwYmY5ODcyZTViMGU0MTBhZWY4N2MiLCJhdWQiOiJqb2JhZG1pbiJ9.ci5br1BL60I4BCbt-ltGMlCWQFu8o_I3Sik0q2BnRUk'};
+console.time('year');
+console.log('11',)
+function year(createTime){
+    axios({
+        url:'https://test-ehr-api.ambow.com/job/teacherstudentbasicresult/findpage',
+        method:'get',
+        headers:headers,
+        params:{
+            tgt:headers.Authorization,
+            createTime:createTime ,
+            page:'1' ,
+            rows:'10000' ,
+            searchName:'' ,
+            teacherId:'116' ,
         }
     })
-    .catch(error => {
-        console.log(error);
-    });
+        .then(response => {
+            var a =response.data.data.list;
+            var index = a.length - 1;
+            function re(i) {
+                var item = a[i]
+                axios({
+                    method: 'get',
+                    headers:headers,
+                    url: 'https://test-ehr-api.ambow.com/job/teacherstudentpayvisit/view',
+                    params:{
+                        tgt:headers.Authorization,
+                        studentBasicResultId:item.studentBasicResultId,
+                    }
+                }).then(res=>{
+                    console.log('\x1b[33m%s\x1b[0m',`${createTime}-操作数${i}/${index}-${item.name}`,`${item.schoolName}-成功`);
+                    if(i < index){
+                        re(++i)
+                    }else{
+                        year(--createTime)
+                    }
+                })
+            }
+            if(a.length > 0){
+                re(0)
+            }else{
+                console.timeEnd('year');
+            }
+        })
+        .catch(error => {
+            console.log(error);
+        });
+}
+year(21)
