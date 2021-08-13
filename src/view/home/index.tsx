@@ -27,6 +27,9 @@ export default defineComponent({
         divContent.push(<div onClick={
             async ()=>{await this.router.push('/main')}
         } >去主业</div>);
+        divContent.push(<div onClick={
+            async ()=>{await this.router.push('/vantHome')}
+        } >去vantHome</div>);
         divContent.push(<theme content={stateHome.msg2} />);
         divContent.push(<el-input v-model={stateHome.msg2} />);
         divContent.push(<el-input v-model={themeColorConfig.theme} />);
