@@ -54,16 +54,16 @@ const router = createRouter(<RouterOptions>{
 
 // 进入前拦截
 router.beforeEach((to, form,next)=>{
-    // if(!localStorage.getItem('token')){
-    //     if(to.name === 'login'){
-    //         next();
-    //     }else{
-    //         next({
-    //             path:"/login"
-    //         })
-    //     }
-    //     return false
-    // }
+    if(!localStorage.getItem('token')){
+        if(to.name === 'login'){
+            next();
+        }else{
+            next({
+                path:"/login"
+            })
+        }
+        return false
+    }
     next();
 })
 
